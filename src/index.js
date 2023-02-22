@@ -114,6 +114,9 @@ function useSocketLync() {
 
 	return {
 		socketLync: {
+			socketId: () => socketLync.socketId(),
+			leave: (...args) => socketLync.leave(...args),
+			leaveChannel: (...args) => socketLync.leaveChannel(...args),
 			subscribeChannel,
 			subscribePrivate,
 			subscribePresence,
