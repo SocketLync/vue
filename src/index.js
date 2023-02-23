@@ -9,7 +9,6 @@ const SocketLyncVue = {
 
 function useSocketLync() {
 	const socketLync = inject('socketLync');
-	const joinedChannels = ref([]);
 	const callbacks = ref({});
 
 	const debug = (...args) => {
@@ -51,7 +50,6 @@ function useSocketLync() {
 
 	function subscribeChannel(name) {
 		if (!socketLync.channels[name]) {
-			joinedChannels.value.push(name);
 			debug(`new channel ${name}`);
 		}
 
@@ -60,7 +58,6 @@ function useSocketLync() {
 
 	function subscribePrivate(name) {
 		if (!socketLync.channels['private-' + name]) {
-			joinedChannels.value.push('private-' + name);
 			debug(`new channel private-${name}`);
 		}
 
@@ -69,7 +66,6 @@ function useSocketLync() {
 
 	function subscribePresence(name) {
 		if (!socketLync.channels['presence-' + name]) {
-			joinedChannels.value.push('presence-' + name);
 			debug(`new channel presence-${name}`);
 		}
 
@@ -78,8 +74,6 @@ function useSocketLync() {
 
 	function unbindAll() {
 		debug('Unbinding all events');
-
-		const leaveChannel = joinedChannels.value.slice();
 
 		Object.keys(callbacks.value).forEach((channel) => {
 			if (!socketLync.channels[channel]) {
@@ -90,24 +84,9 @@ function useSocketLync() {
 			Object.keys(callbacks.value[channel]).forEach((event) => {
 				callbacks.value[channel][event].forEach((callback) => socketLync.channels[channel].unbindEvent(event, callback));
 			});
-
-			if (socketLync.options.autoLeave && socketLync.channels[channel] && Object.keys(socketLync.channels[channel].listeners).length === 0) {
-				leaveChannel.push(channel);
-			}
 		});
 
 		callbacks.value = {};
-
-		if (leaveChannel.length) {
-			leaveChannel.forEach((name) => {
-				if (socketLync.channels[name] && Object.keys(socketLync.channels[name].listeners).length === 0) {
-					debug(`Leave channel: ${name}`);
-					socketLync.leaveChannel(name);
-				}
-			});
-		}
-
-		joinedChannels.value = [];
 	}
 
 	onBeforeUnmount(() => unbindAll());

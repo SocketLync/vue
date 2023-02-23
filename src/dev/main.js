@@ -6,11 +6,13 @@ import io from 'socket.io-client';
 const app = createApp(App);
 
 app.use(SocketLyncVue, {
-	host: 'https://ws.derpierre65.dev/app/APP-ID',
 	client: io,
 	autoConnect: false,
 	autoLeave: true,
 	debug: true,
+	socketOptions: {
+		host: 'https://ws.derpierre65.dev/app/APP-ID',
+	},
 });
 
 app.mount('#app');
