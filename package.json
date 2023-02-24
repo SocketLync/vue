@@ -5,19 +5,19 @@
 	"author": "derpierre65",
 	"license": "MIT",
 	"scripts": {
+		"prepublishOnly": "npm run build",
 		"dev": "vue-cli-service serve src/dev/main.js",
-		"prepare": "npm run build",
 		"build": "npm run build:js",
 		"build:js": "rollup -c rollup.config.mjs"
 	},
 	"main": "./dist/socket-lync-vue.cjs.js",
 	"module": "./dist/socket-lync-vue.esm.js",
 	"peerDependencies": {
-		"vue": "^3.2.0"
+		"vue": "^3.2.0",
+		"@socket-lync/js-client": "^1.0.0-alpha.1"
 	},
 	"devDependencies": {
 		"@rollup/plugin-terser": "^0.4.0",
-		"@socket-lync/js-client": "github:SocketLync/js-client",
 		"@vue/cli-service": "^5.0.8",
 		"rollup": "^3.17.2",
 		"rollup-plugin-vue": "^6.0.0",
